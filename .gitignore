@@ -5,3 +5,4 @@ encoded_train_images.pkl
 glove.6B.200d.txt
 glove6b200d.zip
 results
+__pycache__
