@@ -62,7 +62,7 @@ print("Sample Description 2 : ", descriptions['1000344755'], "\n")
 
 # Cleaning the description strings making it compatible for training model
 
-description_processor.clean_descriptions(descriptions)
+descriptions=description_processor.clean_descriptions(descriptions)
 
 # %%
 

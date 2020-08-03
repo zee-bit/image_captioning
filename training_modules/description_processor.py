@@ -44,6 +44,7 @@ def clean_descriptions(descriptions):
             desc=[word for word in desc if len(word)>1]
             desc=[word for word in desc if word.isalpha()]
             desc_list[i]=' '.join(desc)
+    return descriptions
 
 
 # %%
