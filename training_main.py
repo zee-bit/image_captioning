@@ -308,7 +308,7 @@ steps = len(descriptions)//number_pics_per_bath
 
 # %%
 
-# # Optimizing the model weighs (epoch number of times) and saving the weights locally each time
+# Optimizing the model weighs (epoch number of times) and saving the weights locally each time
 
 for i in range(epochs+1):
     generator=training_functions.data_generator(descriptions,train_features,wordtoix,max_length,number_pics_per_batch)
@@ -322,33 +322,3 @@ for i in range(epochs+1):
 import tensorflow as tf
 model=tf.keras.models.load_model('./model_weights/final_model.h5')
 model.compile(loss='categorical_crossentropy',optimizer=tf.compat.v1.train.AdamOptimizer(learning_rate=0.0001))
-
-# %%
-
-# Initializing the path of the test images
-
-test_folder='./test/'
-test_images=glob.glob(test_folder+'*.jpg')
-
-# %%
-
-# Setting time-stamp as current time and initializing empty dictionary 'encoding_test'
-
-start=time()
-encoding_test={}
-
-# Looping through and encoding all the images in the test directory
-
-for img in test_images:
-    encoding_test[img[len(test_folder):]]=image_processing.encode(img, model_new)
-    #print("time taken in second=",time()-start)
-
-# %%
-    
-# Printing captions for each image in the test folder using the GreedySearch algorithm
-
-pics=list(encoding_test.keys())
-for pic in pics:
-    image=encoding_test[pic].reshape((1,2048))
-    print("Greedy : ",caption_writer.greedySearch(image))
-    print('\n')
