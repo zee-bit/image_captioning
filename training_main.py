@@ -141,27 +141,9 @@ vocab=description_properties.description_vocabulary(all_train_captions)
 
 # %%
 
-# Creating dictionaries mapping indices to words and vice-versa
+# Creating and saving locally the dictionaries mapping indices to words and vice-versa
 
-ixtoword={}
-wordtoix={}
-ix=1
-for w in vocab:
-    wordtoix[w]=ix
-    ixtoword[ix]=w
-    ix+=1
-    
-# %%
-
-# Saving the mapping dictionaries locally
-    
-with open('./resources/ixtoword.pkl','wb') as f1:
-    dump(ixtoword,f1)
-    f1.close()
-
-with open('./resources/wordtoix.pkl','wb') as f2:
-    dump(wordtoix,f2)
-    f2.close()
+(ixtoword, wordtoix)=training_functions.get_mapping_dicts(vocab)
 
 # %%
 

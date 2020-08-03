@@ -2,6 +2,7 @@ import numpy as np
 from numpy import array
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
+from pickle import dump, load
 
 # %%
 
@@ -32,6 +33,30 @@ def data_generator(descriptions,photos,wordtoix,max_length,num_photos_per_batch,
                 X1,X2,y=list(),list(),list()
                 n=0
         
+# %%
+   
+# Function to create and saving locally the dictionaries mapping indices to words and vice-versa
+     
+def get_mapping_dicts(vocab):           
+    ixtoword={}
+    wordtoix={}
+    ix=1
+    for w in vocab:
+        wordtoix[w]=ix
+        ixtoword[ix]=w
+        ix+=1
+        
+    with open('./resources/ixtoword.pkl','wb') as f1:
+        dump(ixtoword,f1)
+        f1.close()
+    
+    with open('./resources/wordtoix.pkl','wb') as f2:
+        dump(wordtoix,f2)
+        f2.close()
+        
+    return (ixtoword, wordtoix)
+    
+
 # %%
 
 # Function to import the 'glove' word-set and storing it in 'embedding_index'
