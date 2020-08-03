@@ -184,34 +184,10 @@ print("Length of max-length description = ",max_length)
 
 # %%
 
-# Importing the 'glove' word-set and storing it in 'embedding_index'
-
-glove_dir='glove.6B.200d.txt'
-embedding_index={}
-
-f=open(glove_dir,encoding="utf-8")
-for line in f:
-    values=line.split()
-    word=values[0]
-    coefs=np.asarray(values[1:],dtype='float32')
-    embedding_index[word]=coefs
-f.close()
-
-print("Found %s word vectors",len(embedding_index))
-
-# %%
-
 # Making a matrix of all words common in the glove word-set and the 'wordtoix' pickled dict
 
 embedding_dim=200
-embedding_matrix=np.zeros((vocab_size,embedding_dim))
-
-for word, i in wordtoix.items():
-    embedding_vector=embedding_index.get(word)
-    if embedding_vector is not None:
-        embedding_matrix[i]=embedding_vector
-        
-print("Embedding Matrix dimensions : ", embedding_matrix.shape)
+embedding_matrix=training_functions.get_embedding_matrix(embedding_dim, wordtoix, vocab_size)
 
 # %%
 
@@ -273,7 +249,7 @@ model.save('./model_weights/model_'+str(0)+'.h5')
 # Optimizing the model weighs (epoch number of times) and saving the weights locally each time
 
 for i in range(epochs+1):
-    generator=training_functions.data_generator(descriptions,train_features,wordtoix,max_length,number_pics_per_batch)
+    generator=training_functions.data_generator(descriptions,train_features,wordtoix,max_length,number_pics_per_batch,vocab_size)
     model.fit_generator(generator,epochs=1,steps_per_epoch=steps,verbose=1)
     model.save('./model_weights/model_'+str(i)+'.h5')
 

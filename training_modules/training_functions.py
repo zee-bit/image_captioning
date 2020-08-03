@@ -1,8 +1,13 @@
+import numpy as np
+from numpy import array
+from keras.preprocessing.sequence import pad_sequences
+from keras.utils import to_categorical
+
 # %%
 
 # Function to initialize a generator for training and optimizing the weights of the model
 
-def data_generator(descriptions,photos,wordtoix,max_length,num_photos_per_batch):
+def data_generator(descriptions,photos,wordtoix,max_length,num_photos_per_batch, vocab_size):
     X1,X2,y=list(),list(),list()
     n=0
     
@@ -26,3 +31,35 @@ def data_generator(descriptions,photos,wordtoix,max_length,num_photos_per_batch)
                 yield [[array(X1),array(X2)],array(y)]
                 X1,X2,y=list(),list(),list()
                 n=0
+        
+# %%
+
+# Function to import the 'glove' word-set and storing it in 'embedding_index'
+                
+def get_glove_wordset():
+    glove_dir='./resources/glove.6B.200d.txt'
+    embedding_index={}
+    
+    f=open(glove_dir,encoding="utf-8")
+    for line in f:
+        values=line.split()
+        word=values[0]
+        coefs=np.asarray(values[1:],dtype='float32')
+        embedding_index[word]=coefs
+    f.close()
+    return embedding_index
+
+# %%
+
+# Function to make a matrix of all words common in the glove word-set and the 'wordtoix' pickled dict
+
+def get_embedding_matrix(embedding_dim, wordtoix, vocab_size):
+    embedding_index=get_glove_wordset()
+    embedding_matrix=np.zeros((vocab_size,embedding_dim))
+    
+    for word, i in wordtoix.items():
+        embedding_vector=embedding_index.get(word)
+        if embedding_vector is not None:
+            embedding_matrix[i]=embedding_vector
+    
+    return embedding_matrix
