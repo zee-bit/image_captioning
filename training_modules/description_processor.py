@@ -48,6 +48,15 @@ def clean_descriptions(descriptions):
 
 
 # %%
+    
+# Function to load, process and return the processed descriptions
+    
+def load_final_descriptions():
+    descriptions = load_descriptions()
+    descriptions = clean_descriptions(descriptions)
+    return descriptions
+
+# %%
 
 # Function to save local copy of cleaned description dictionary
 

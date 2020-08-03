@@ -46,9 +46,9 @@ from training_modules import training_functions
 
 # %%
 
-# Loading training descriptions into 'descriptions' dictionary
+# Loading processed training descriptions into 'descriptions' dictionary
 
-descriptions= description_processor.load_descriptions()
+descriptions= description_processor.load_final_descriptions()
 
 # %%
 
@@ -58,19 +58,6 @@ print("Sample keys : ", list(descriptions.keys())[:5], "\n")
 print("Sample Description 1 : ", descriptions['1000268201'], "\n")
 print("Sample Description 2 : ", descriptions['1000344755'], "\n")
 
-# %%
-
-# Cleaning the description strings making it compatible for training model
-
-descriptions=description_processor.clean_descriptions(descriptions)
-
-# %%
-
-#Printing cleaned description samples
-
-print("Sample 1 : ", descriptions['1000344755'], "\n")
-print("Sample 2 : ", descriptions['1000268201'], "\n")
-    
 # %%
 
 # Adding all distinct words in the description dictionary to the 'all_desc' set
