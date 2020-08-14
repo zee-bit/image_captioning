@@ -13,20 +13,6 @@ def preprocess(image_path):
     #Loading Image file
     img=tf.keras.preprocessing.image.load_img(image_path)
     
-    #Adding white padding to convert image into square dimensions
-    size=img.size
-    if(size[0]>size[1]):
-        (size_max,size_min)=(size[0],size[1])
-        border_dir='v'
-    else:
-        (size_max,size_min)=(size[1],size[0])
-        border_dir='h'
-    border_amount=math.ceil((size_max-size_min)/2)
-    if (border_dir == 'v'):
-        img = ImageOps.expand(img,border=(0,border_amount),fill='white')
-    else:
-        img = ImageOps.expand(img,border=(border_amount,0),fill='white')
-    
     #Resizing image to 299x299px for feeding it into InceptionV3 Model
     img = img.resize((299,299),resample=0)
     
