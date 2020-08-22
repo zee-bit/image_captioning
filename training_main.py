@@ -87,7 +87,7 @@ encoding_train = {}
 # Looping through and encoding all the images in the train directory
 
 for img in img:
-    encoding_train[img[len(images):]] = image_processing.encode(img)
+    encoding_train[img[len(images) :]] = image_processing.encode(img)
     print("Time taken in second=", time() - start)
 # %%
 
