@@ -1,58 +1,25 @@
 # %%
 
 # Importing generic python libraries
-import string
-import os
-import math
 import glob
-import numpy as np
-from numpy import array
-import pandas as pd
-import matplotlib.pyplot as plt
-
-get_ipython().run_line_magic("matplotlib", "inline")
 from time import time
 
 # Importing libraries for image manipulation, deep-learning and pickling
-from PIL import Image, ImageOps
 from pickle import dump, load
 import tensorflow as tf
 
 # Importing functionalities from 'keras' library
-from keras.preprocessing import sequence
-from keras.models import Sequential
-from keras.layers import (
-    LSTM,
-    Embedding,
-    TimeDistributed,
-    Dense,
-    RepeatVector,
-    Activation,
-    Flatten,
-    Reshape,
-    concatenate,
-    Dropout,
-    BatchNormalization,
-)
-from keras.optimizers import Adam, RMSprop
-from keras.layers.wrappers import Bidirectional
+from keras.layers import LSTM, Embedding, Dense, Dropout
 from keras.layers.merge import add
 from keras.applications.inception_v3 import InceptionV3
-from keras.preprocessing import image
 from keras.models import Model
-from keras import Input, layers
-from keras import optimizers
-from keras.applications.inception_v3 import preprocess_input
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
-from keras.utils import to_categorical
+from keras import Input
 
-#%%
+# %%
 
 # Importing custom modules
 
 from utils import image_processing
-from utils import caption_writer
 from training_modules import description_processor
 from training_modules import description_properties
 from training_modules import training_functions
@@ -97,7 +64,8 @@ print("dataset=", len(train))
 
 # %%
 
-# Initializing the images-dataset directory and adding the name of each image into 'img' list
+# Initializing the images-dataset directory
+# Adding the name of each image into 'img' list
 
 images = "./flickr30k_images/flickr30k_images/"
 img = glob.glob(images + "*.jpg")
@@ -111,14 +79,15 @@ model_new = Model(model.input, model.layers[-2].output)
 
 # %%
 
-# Setting time-stamp as current time and initializing empty dictionary 'encoding_train'
+# Setting time-stamp as current time
+# Initializing empty dictionary 'encoding_train'
 start = time()
 encoding_train = {}
 
 # Looping through and encoding all the images in the train directory
 
 for img in img:
-    encoding_train[img[len(images) :]] = image_processing.encode(img)
+    encoding_train[img[len(images):]] = image_processing.encode(img)
     print("Time taken in second=", time() - start)
 # %%
 
@@ -128,7 +97,8 @@ with open("./resources/encoded_train_images.pkl", "wb") as f:
     dump(encoding_train, f)
 # %%
 
-# Loading the pickled encoded-image dataset and initializing it as the training feature matrix
+# Loading the pickled encoded-image dataset
+# Initializing it as the training feature matrix
 
 train_features = load(open("./resources/encoded_train_images.pkl", "rb"))
 print(len(train_features))
@@ -145,19 +115,20 @@ len(all_train_captions)
 
 # %%
 
-# Prints the word count of the description dataset and initializes the frequent-words list
+# Prints the word count of the description dataset
+# Iinitializes the frequent-words list
 
 vocab = description_properties.description_vocabulary(all_train_captions)
 
 # %%
 
-# Creating and saving locally the dictionaries mapping indices to words and vice-versa
+# Saving locally the dictionaries mapping indices to words and vice-versa
 
 (ixtoword, wordtoix) = training_functions.get_mapping_dicts(vocab)
 
 # %%
 
-# Initializing and printing the size of the vocabulary using the index-to-word mapping dict
+# Printing the size of the vocabulary using the index-to-word mapping dict
 vocab_size = len(ixtoword) + 1
 print(vocab_size)
 
@@ -169,14 +140,14 @@ print(len(description_properties.to_lines(descriptions)))
 
 # %%
 
-# Saves and prints the length of the longest description in the description dataset
+# Prints the length of the longest description in the description dataset
 
 max_length = description_properties.max_length(descriptions)
 print("Length of max-length description = ", max_length)
 
 # %%
 
-# Making a matrix of all words common in the glove word-set and the 'wordtoix' pickled dict
+# Making a matrix of all words common in the glove set and dict
 
 embedding_dim = 200
 embedding_matrix = training_functions.get_embedding_matrix(
@@ -185,7 +156,8 @@ embedding_matrix = training_functions.get_embedding_matrix(
 
 # %%
 
-# Customizing the layers of the model and selecting the appropriate activation functions
+# Customizing the layers of the model
+# Selecting the appropriate activation functions
 
 inputs1 = Input(shape=(2048,))
 fe1 = Dropout(0.5)(inputs1)
@@ -208,7 +180,7 @@ model.summary()
 
 # %%
 
-# Setting the weights of the model layer in accordance with the 'embedding-matrix' common wordset
+# Setting the weights of the model layer
 
 model.layers[2]
 model.layers[2].set_weights([embedding_matrix])
@@ -225,8 +197,8 @@ model.compile(loss="categorical_crossentropy", optimizer="adam")
 # Setting parameters for model training/optimization
 
 epochs = 9
-number_pics_per_batch = 3
-steps = len(descriptions) // number_pics_per_batch
+ppb = 3
+steps = len(descriptions)
 
 # %%
 
@@ -240,16 +212,11 @@ model.save("./model_weights/model_" + str(0) + ".h5")
 
 # %%
 
-# Optimizing the model weighs (epoch number of times) and saving the weights locally each time
+# Optimizing the model weighs (epoch number of times) and saving the weights
 
 for i in range(epochs + 1):
     generator = training_functions.data_generator(
-        descriptions,
-        train_features,
-        wordtoix,
-        max_length,
-        number_pics_per_batch,
-        vocab_size,
+        descriptions, train_features, wordtoix, max_length, ppb, vocab_size,
     )
     model.fit_generator(generator, epochs=1, steps_per_epoch=steps, verbose=1)
     model.save("./model_weights/model_" + str(i) + ".h5")
@@ -257,7 +224,6 @@ for i in range(epochs + 1):
 
 # Storing the final trained model in 'new_model'
 
-import tensorflow as tf
 
 new_model = tf.keras.models.load_model("./model_weights/model_7.h5")
 
@@ -275,19 +241,18 @@ steps = len(descriptions) // number_pics_per_bath
 
 # %%
 
-# Optimizing the model weighs (epoch number of times) and saving the weights locally each time
+# Optimizing the model weighs (epoch number of times)
+# Saving the weights locally each time
 
 for i in range(epochs + 1):
     generator = training_functions.data_generator(
-        descriptions, train_features, wordtoix, max_length, number_pics_per_batch
+        descriptions, train_features, wordtoix, max_length, ppb
     )
     model.fit_generator(generator, epochs=1, steps_per_epoch=steps, verbose=1)
     model.save("./model_weights/model_" + str(i + 10) + ".h5")
 # %%
 
 # Initializing final model with final-trained weights
-
-import tensorflow as tf
 
 model = tf.keras.models.load_model("./model_weights/final_model.h5")
 model.compile(

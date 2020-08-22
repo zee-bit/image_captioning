@@ -1,6 +1,6 @@
 # %%
 
-# Function to print the number of distinct words and return the frequent-words list
+# Function to print the number of distinct words and return the freq-words list
 
 
 def description_vocabulary(all_train_captions):

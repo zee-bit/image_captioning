@@ -1,52 +1,14 @@
 # %%
 
-# Importing generic python libraries
-import string
-import os
-import math
-import glob
-import numpy as np
-from numpy import array
-import pandas as pd
-import matplotlib.pyplot as plt
-from time import time
-
 # Importing libraries for image manipulation, deep-learning and pickling
-from PIL import Image, ImageOps
-from pickle import dump, load
+from pickle import load
 import tensorflow as tf
 
 # Importing functionalities from 'keras' library
-from keras.preprocessing import sequence
-from keras.models import Sequential
-from keras.layers import (
-    LSTM,
-    Embedding,
-    TimeDistributed,
-    Dense,
-    RepeatVector,
-    Activation,
-    Flatten,
-    Reshape,
-    concatenate,
-    Dropout,
-    BatchNormalization,
-)
-from keras.optimizers import Adam, RMSprop
-from keras.layers.wrappers import Bidirectional
-from keras.layers.merge import add
 from keras.applications.inception_v3 import InceptionV3
-from keras.preprocessing import image
 from keras.models import Model
-from keras import Input, layers
-from keras import optimizers
-from keras.applications.inception_v3 import preprocess_input
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
-from tensorflow.python.keras.backend import set_session
-from keras.utils import to_categorical
 
-#%%
+# %%
 
 
 def generate_caption(filepath):
@@ -80,7 +42,7 @@ def generate_caption(filepath):
     # Initializing empty dictionary for encoding custom images
     new_encoding_test = {}
 
-    # Selecting and processing single test image and mapping it into the encoding dictionary
+    # Selecting and processing single test image into the encoding dictionary
 
     new_encoding_test[0] = image_processing.encode(filepath, model_new)
 

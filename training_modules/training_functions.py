@@ -2,15 +2,15 @@ import numpy as np
 from numpy import array
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
-from pickle import dump, load
+from pickle import dump
 
 # %%
 
-# Function to initialize a generator for training and optimizing the weights of the model
+# Function to initialize a generator for training and optimizing the weights
 
 
 def data_generator(
-    descriptions, photos, wordtoix, max_length, num_photos_per_batch, vocab_size
+    descriptions, photos, wtix, max_length, num_photos_per_batch, v_size
 ):
     X1, X2, y = list(), list(), list()
     n = 0
@@ -20,12 +20,12 @@ def data_generator(
             n += 1
             photo = photos[key + ".jpg"]
             for desc in desc_list:
-                seq = [wordtoix[word] for word in desc.split(" ") if word in wordtoix]
+                seq = [wtix[word] for word in desc.split(" ") if word in wtix]
                 for i in range(1, len(seq)):
                     in_seq, out_seq = seq[:i], seq[i]
                     in_seq = pad_sequences([in_seq], maxlen=max_length)[0]
 
-                    out_seq = to_categorical([out_seq], num_classes=vocab_size)[0]
+                    out_seq = to_categorical([out_seq], num_classes=v_size)[0]
 
                     X1.append(photo)
                     X2.append(in_seq)
@@ -38,7 +38,7 @@ def data_generator(
 
 # %%
 
-# Function to create and saving locally the dictionaries mapping indices to words and vice-versa
+# Function to create and save locally the mapping dictionaries
 
 
 def get_mapping_dicts(vocab):
@@ -79,7 +79,7 @@ def get_glove_wordset():
 
 # %%
 
-# Function to make a matrix of all words common in the glove word-set and the 'wordtoix' pickled dict
+# Function to make a matrix of common words in 'glove' and wordtoix dict
 
 
 def get_embedding_matrix(embedding_dim, wordtoix, vocab_size):

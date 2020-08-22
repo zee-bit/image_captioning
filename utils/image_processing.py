@@ -1,13 +1,13 @@
-import math
 import numpy as np
 import tensorflow as tf
-from PIL import Image, ImageOps
 from keras.preprocessing import image
 from keras.applications.inception_v3 import preprocess_input
 
-#%%
+# %%
 
 # Image-Preprocessing Function : takes path of the image as the only argument
+
+
 def preprocess(image_path):
 
     # Loading Image file
@@ -23,9 +23,9 @@ def preprocess(image_path):
     return x
 
 
-#%%
+# %%
 
-# Image-Encoding Function : takes PIL image and the trained model as the two arguments
+# Image-Encoding Function : takes PIL image and the trained model
 def encode(image, model_new):
 
     # Pre-processing image using the 'preprocess' function

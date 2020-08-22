@@ -1,18 +1,48 @@
-# image_captioning
-this is Deep Learning based image captioning project 
+# Image Caption Generator
 
-the image_captioning_train file is the jupyter notebook file in which all the training regarding the image captioning is done .
-the images are used from the flick-30k dataset(dataset being availabelin kaggle )
+## Overview
 
-the images are reduces to the feature vector form using the vgg16 model and are saved in the pickle file.
-the captioing and the reduces feature vectors are then trained to learning the captions using lstm models .
+This is a deep learning based image captioning project. It allows the user to upload an image through a webpage trained VGG16 model to generate and show its captions. The application accepts .jpg, .jpeg and .png format images and generates captions of upto 35 words.
 
-predictions for test images can be done by simply running the predict.ipynb file.
-for predicting on your own test images you simply need to put your test image in the test folder and run the predict.ipynb file.
-the captions for the given image willb e generated.
+## Application Structure
 
-Thought the project has been completed for the DL part, the training has not been able to be user good due to extensive computationand lack
-of hardware resources.
-Improved version of this model will be pushed soon.
+### FRONT END
 
-the project will also be given a web frontend to provide a better user experience in future.
+The front-end web application is present in 'app.py' file and is written using the flask library in Python. It allows the user to access the webpage in their own local server and provides a layout for uploading images and viewing captions.
+
+### PREDICT FILE
+
+The 'predict_main.py' file contains the necessary functions to generate the final caption and format it to make it more presentable. It inherits the both the utility modules 'caption_writer.py' and 'image_processing.py' stored in the 'utils' folder. It offers the 'generate_caption' function which is inherited by the 'app.py' file.
+
+### TRAINING FILE
+
+The 'training_main.py' file is the python file in which the training of the model is being done. The training images are used from the 'flick-30k' dataset available on kaggle. It imports the utitlity modules as well as three training modules stored in the 'training_modules' folder. The images are reduced to the feature-vector form using the VGG16 model. The reduced feature-vectors are then trained to learn the captions using LSTM models and the model is pickled in the 'model_weights' folder as 'final_model.h5' file. 
+
+### UTILITIES
+
+1. **'caption_writer.py'** : It provides the necessary functions for mapping the caption words from the index-to-word and word-to-index dictionaries which it accepts as input and outputs the unformatted caption as a raw string.
+
+2. **'image_processing.py** : It encodes the input image to the form which is compliant with the model and also reduces into its feature-vector format. The output image dimesions are 300x300 px.
+
+### TRAINING MODULES
+
+1. **'description_processor.py'** : It imports and cleans the the description of the flickr-30k image dataset and provides the model compliant descriptions as output in the form of a mapped dictionary.
+
+2. **'description_properties.py'** :  It provides the various parameters for the model output such as the maximum length of the function and the commmon wordset which is to be used, thus providing the model with the caption-vocabulary to work with.
+
+3. **'training_functions.py'** : It contains functions to import and tune the 'glove' wordset as well as initializes and configures the embedding matrix and mapping dictionaries. It provides the 'data_generator' function which takes the image and model parameters as input and provides the model with appropriate input matrices.
+
+## Screenshots
+
+### Empty User-Interface
+
+![Empty User-interface](https://i.imgur.com/piDA0RT.png)
+
+### Sample Caption
+
+![Sample Caption](https://i.imgur.com/YH3MojM.png)
+
+
+
+
+

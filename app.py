@@ -1,11 +1,10 @@
 # Importing utility python libraries
 import os
-import urllib.request
 from werkzeug.utils import secure_filename
-import numpy as np
 
 # Importing flask libraries
-from flask import Flask, flash, request, redirect, render_template, url_for
+from flask import Flask, flash, request, redirect
+from flask import render_template as rt
 
 # Importing ML libraries
 import keras
@@ -32,14 +31,16 @@ app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg"])
 
 # Function for checking uploaded file extension
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def allowed_file(f):
+    return "." in f and f.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # Setting route for handling 'GET' requests
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return rt("index.html")
 
 
 # Setting route for handling 'POST' requests
@@ -60,7 +61,7 @@ def upload_image():
                 set_session(session)
                 caption = generate_caption(filepath)
             print("***" + caption + "***")
-            return render_template("index.html", filename=filepath, caption=caption)
+            return rt("index.html", filename=filepath, caption=caption)
         else:
             flash("Allowed image types are : .png, .jpg, .jpeg")
             return redirect(request.url)
