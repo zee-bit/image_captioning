@@ -20,7 +20,7 @@ The 'training_main.py' file is the python file in which the training of the mode
 
 ### UTILITIES
 
-1. **'caption_writer.py'**: It provides the necessary functions for mapping the caption words from the index-to-word and word-to-index dictionaries which it accepts as input and outputs the unformatted caption as a raw string. It also contains the function to add punctuations, enforce grammatical standards and remove repititions from the generated caption.
+1. **'caption_writer.py'**: It provides the necessary functions for mapping the caption words from the index-to-word and word-to-index dictionaries which it accepts as input and outputs the unformatted caption as a raw string. It also contains the function to add punctuations, enforce grammatical standards and remove repetitions from the generated caption.
 
 2. **'image_processing.py**: It encodes the input image to the form which is compliant with the model and also reduces into its feature-vector format. The output image dimensions are 300x300 px.
 
