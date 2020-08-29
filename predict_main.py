@@ -53,24 +53,63 @@ def generate_caption(filepath):
         image, max_length, wordtoix, ixtoword, nlp_model
     )
 
-    # Shortening the caption and removing repititions
+    # Splitting the caption into words and resizing the length
 
-    final_caption = caption.split()
-    final_caption = final_caption[0:30]
-    for i in range(50):
-        if i + 1 < len(final_caption):
-            if final_caption[i] == final_caption[i + 1]:
-                del final_caption[i + 1]
-    # Adding punctuations and returning the caption
+    f_caption = caption.split()
+    f_caption = f_caption[0:35]
 
-    final_caption = " ".join(final_caption)
-    final_caption = final_caption[0].upper() + final_caption[1:] + "."
+    # Removing consecutive replications
 
-    return final_caption
+    for i in range(35):
+        if i + 1 < len(f_caption):
+            if f_caption[i] == f_caption[i + 1]:
+                del f_caption[i + 1]
+    # Adding comma punctuation
 
+    for i in range(35):
+        if i + 2 < len(f_caption):
+            if f_caption[i] == "and" and f_caption[i + 2] == "and":
+                f_caption[i] = ","
+    # Removing repitition of multi-word caption terms
 
-# %%
+    i = 0
+    while i + 3 < len(f_caption):
+        if f_caption[i] == f_caption[i + 2]:
+            if f_caption[i + 1] == f_caption[i + 3]:
+                f_caption[i + 2] = f_caption[i + 3] = "$"
+        i += 1
+    f_caption = list(filter(lambda a: a != "$", f_caption))
 
-# image_path = "1440465.jpg"
-# caption = generate_caption(image_path)
-# print(caption)
+    i = 0
+    while i + 5 < len(f_caption):
+        if f_caption[i] == f_caption[i + 3]:
+            if f_caption[i + 1] == f_caption[i + 4]:
+                if f_caption[i + 2] == f_caption[i + 5]:
+                    f_caption[i + 3] = f_caption[i + 4] = "$"
+                    f_caption[i + 5] = "$"
+                    f_caption = list(filter(lambda a: a != "$", f_caption))
+                    i -= 3
+        i += 1
+    # Removing blank space adjacent to punctuations
+
+    i = 0
+    while i < len(f_caption):
+        if f_caption[i] == ",":
+            f_caption[i - 1] = f_caption[i - 1] + ","
+            del f_caption[i]
+            i -= 1
+        i += 1
+    # Removing the occurrence of auxiliary words as the last term
+
+    aux_words = ["and", "or", "is", "was", "a", "an", "it", "of", "the"]
+    end_word = f_caption[-1]
+    if end_word in aux_words:
+        del f_caption[-1]
+    # Rejoining the caption and adding sentence formatting
+
+    f_caption = " ".join(f_caption)
+    f_caption = f_caption[0].upper() + f_caption[1:] + "."
+
+    # Returning the formatted captions
+
+    return f_caption

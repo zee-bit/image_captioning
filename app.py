@@ -60,7 +60,6 @@ def upload_image():
             with graph.as_default():
                 set_session(session)
                 caption = generate_caption(filepath)
-            print("***" + caption + "***")
             return rt("index.html", filename=filepath, caption=caption)
         else:
             flash("Allowed image types are : .png, .jpg, .jpeg")
